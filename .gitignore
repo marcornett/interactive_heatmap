@@ -2,6 +2,5 @@
 .env
 /GeoLite2-City-CSV_20190618
 /Full-Stack_Developer_Problem.pdf
-/data
 /server/node_modules
-/server/data
+/server/data/GeoLite2-City-Blocks-IPv4.csv
