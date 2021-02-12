@@ -3,6 +3,7 @@ const express = require('express')
 const cors = require('cors')
 const csv = require('csv-parser')
 const fs = require('fs')
+const Schema = require('./utils/ip_address_pb')
 
 // Start App
 const app = express()
@@ -14,7 +15,6 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/token', (req, res) => {
-    // TODO Check if authorized
     try{
         res.send(process.env.ACCESS_TOKEN)
     } catch(err){
@@ -25,11 +25,28 @@ app.get('/token', (req, res) => {
 })
 
 app.get('/data', async (req, res) =>{
-    let boundingBox // TODO Define Bounding Box
+    let id = 1
     try{
-        fs.createReadStream('../data/test.csv')
+        fs.createReadStream('./data/GeoLite2-City-Blocks-IPv4.csv')
         .pipe(csv())
         .on('data', (data) => {
+
+            // Attempt at Protocol Buffers
+            const address = new Schema.IP_Address()
+            // Set Id
+            address.setId(id)
+            id++
+            // Set Data
+            address.setLatitude(data['latitude'])
+            address.setLongitude(data['longitude'])
+            address.setIntensity
+            // Group addresses
+            const addresses = new Schema.IP_Addresses()
+            addresses.addIpAddress(address)
+            // Serialize
+            let bytes = addresses.serializeBinary()
+            // dataIP.push(bytes)
+
             dataIP.push({
                 'latitude': data['latitude'], 
                 'longitude': data['longitude']
@@ -39,7 +56,7 @@ app.get('/data', async (req, res) =>{
             res.send(dataIP)
         })
     } catch(err){
-        console.error('Issue collecting CSV data.', err)
+        console.error('Issue collecting data.', err)
     }
     
 })
