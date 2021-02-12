@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message IP_Address{
+    int32 id = 1;
+    float latitude = 2;
+    float longitude = 3;
+    float intensity = 4;
+}
+
+message IP_Addresses{
+    repeated IP_Address ip_address = 1;
+}
